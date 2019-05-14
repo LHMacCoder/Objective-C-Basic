@@ -46,7 +46,9 @@ objectMetaClass是NSObject的meta-class对象（元类对象），每个类在�
 ** 当调用类方法时，通过class的isa找到meta-class，最后找到类方法的实现进行调用
 * 元类对象的isa指向基类的元类对象
 ### superclass指针
+![image](https://github.com/lin450922/Objective-C/blob/master/images/class对象的superclas指针.png)
 * 当Student的instance对象要调用Person的对象方法时，会先通过isa找到Student的class，然后通过superclass找到Person的class，最后找到对象方法的实现进行调用
+![image](https://github.com/lin450922/Objective-C/blob/master/images/meta-class对象的superclas指针.png)
 * 当Student的class要调用Person的类方法时，会先通过isa找到Student的meta-class，然后通过superclass找到Person的meta-class，最后找到类方法的实现进行调用
 ### isa和superclass总结
 * instance的isa指向class
