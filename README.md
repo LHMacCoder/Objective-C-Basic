@@ -1,7 +1,7 @@
 # Objective-C
 Objective-C语法和底层知识的整理，方便个人复习。
 # Objective-C本质
-Objective-C的底层代码其实都是由C/C++来实现的，Objective-C中的对象就有C++中的结构体这一种数据结构来构造。<br>一个NSObject对象，系统分配了16个字节给NSObject对象（通过malloc_size函数获得），但NSObject对象内部只使用了8个字节的空间（64bit环境下，可以通过class_getInstanceSize函数获得）。这里设计到一个知识点：内存对齐。<br> 
+Objective-C的底层代码其实都是由C/C++来实现的，Objective-C中的对象就有C++中的结构体这一种数据结构来构造。<br>一个NSObject对象，系统分配了16个字节给NSObject对象（通过malloc_size函数获得），但NSObject对象内部只使用了8个字节的空间（64bit环境下，可以通过class_getInstanceSize函数获得）。这里涉及到一个知识点：内存对齐。<br> 
 * 内存对齐：
 # Objective-C对象的分类
 OC对象有3种：实例对象、类对象和元类对象。
@@ -63,6 +63,19 @@ objectMetaClass是NSObject的meta-class对象（元类对象），每个类在�
   * isa找到class，方法不存在，就通过superclass找父类
 * class调用类方法的轨迹
   * isa找meta-class，方法不存在，就通过superclass找父类
+## 类的结构
+### isa指针结构
+* 从64bit开始，isa需要进行一次位运算，才能计算出真实地址。
+```
+# if __arm64__
+#   define ISA_MASK        0x0000000ffffffff8ULL
+# elif __x86_64__
+#   define ISA_MASK        0x00007ffffffffff8ULL
+# endif
+```
+### 类对象和元类对象的本质
+class、meta-class对象的本质结构都是struct objc_class。
+#### struct objc_class
 
 
 
