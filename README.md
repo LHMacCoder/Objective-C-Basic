@@ -78,7 +78,9 @@ objectMetaClass是NSObject的meta-class对象（元类对象），每个类在�
 class、meta-class对象的本质结构都是struct objc_class。
 #### struct objc_class
 ![image](https://github.com/lin450922/Objective-C/blob/master/images/struct_objc_class.png)
-
+# KVO & KVC
+## KVO
+KVO的全称是Key-Value Observing，俗称“键值监听”，可以用于监听某个对象属性值的改变。
 
 
 
