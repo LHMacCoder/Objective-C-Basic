@@ -13,4 +13,26 @@ NSObject *object2 = [[NSObject alloc] init];
 ```
 object1和object2分别是两个不同的实例对象，分别占据两块不同的内存空间。<br>实例对象在内存中的存储信息包括：isa指针和成员变量的具体值。
 ## 类对象（Class对象）
-* 
+```
+Class objectClass1 = [object1 class];
+Class objectClass2 = [object2 class];
+Class objectClass3 = object_getClass(object1);
+Class objectClass4 = object_getClass(object2);
+Class objectClass5 = [NSObject class];
+```
+objectClass1 ~ objectClass5都是NSObject的class对象（类对象）。它们是同一个对象。每个类在内存中有且只有一个class对象。<br>
+* 类对象在内存中的存储信息包括：
+* isa指针
+* superclass指针
+* 类的属性信息（@property）、类的对象方法信息（instance method）
+* 类的协议信息（protocol）、类的成员变量信息（ivar）
+## 元类对象（meta-class对象）
+```
+Class objectMetaClass = object_getClass(objectClass5);
+```
+objectMetaClass是NSObject的meta-class对象（元类对象），每个类在内存中有且只有一个meta-class对象。<br>
+* 元类对象在内存中的存储信息包括：
+* isa指针
+* superclass指针
+* 类的类方法信息（class mehtod）
+
