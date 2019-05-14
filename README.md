@@ -37,20 +37,20 @@ objectMetaClass是NSObject的meta-class对象（元类对象），每个类在�
 * isa指针
 * superclass指针
 * 类的类方法信息（class mehtod）
-## isa指针和superclass指针
-### isa指针
+# isa指针和superclass指针
+## isa指针
 ![image](https://github.com/lin450922/Objective-C/blob/master/images/isa指针指向.png)
 * 实例对象的isa指针指向类对象
  * 当调用对象方法时，通过instance的isa找到class，最后找到对象方法的实现进行调用
 * 类对象的isa指针指向元类对象
  * 当调用类方法时，通过class的isa找到meta-class，最后找到类方法的实现进行调用
 * 元类对象的isa指向基类的元类对象
-### superclass指针
+## superclass指针
 ![image](https://github.com/lin450922/Objective-C/blob/master/images/class对象的superclas指针.png)
 * 当Student的instance对象要调用Person的对象方法时，会先通过isa找到Student的class，然后通过superclass找到Person的class，最后找到对象方法的实现进行调用
 ![image](https://github.com/lin450922/Objective-C/blob/master/images/meta-class对象的superclas指针.png)
 * 当Student的class要调用Person的类方法时，会先通过isa找到Student的meta-class，然后通过superclass找到Person的meta-class，最后找到类方法的实现进行调用
-### isa和superclass总结
+## isa和superclass总结
 ![image](https://github.com/lin450922/Objective-C/blob/master/images/isa和superclass.png)
 * instance的isa指向class
 * class的isa指向meta-class
@@ -63,8 +63,8 @@ objectMetaClass是NSObject的meta-class对象（元类对象），每个类在�
   * isa找到class，方法不存在，就通过superclass找父类
 * class调用类方法的轨迹
   * isa找meta-class，方法不存在，就通过superclass找父类
-## 类的结构
-### isa指针结构
+# 类的结构
+## isa指针结构
 ![image](https://github.com/lin450922/Objective-C/blob/master/images/isa指针.png)
 * 从64bit开始，isa需要进行一次位运算，才能计算出真实地址。
 ```
@@ -74,9 +74,9 @@ objectMetaClass是NSObject的meta-class对象（元类对象），每个类在�
 #   define ISA_MASK        0x00007ffffffffff8ULL
 # endif
 ```
-### 类对象和元类对象的本质
+## 类对象和元类对象的本质
 class、meta-class对象的本质结构都是struct objc_class。
-#### struct objc_class
+### struct objc_class
 ![image](https://github.com/lin450922/Objective-C/blob/master/images/struct_objc_class.png)
 # KVO & KVC
 ## KVO
@@ -142,14 +142,65 @@ void _NSSetIntValueAndNotify()
 ## KVC
 KVC的全称是Key-Value Coding，俗称“键值编码”，可以通过一个key来访问某个属性<br>
 常见的API有
-* - (void)setValue:(id)value forKeyPath:(NSString *)keyPath;
-* - (void)setValue:(id)value forKey:(NSString *)key;
-* - (id)valueForKeyPath:(NSString *)keyPath;
-* - (id)valueForKey:(NSString *)key; 
+* \- (void)setValue:(id)value forKeyPath:(NSString *)keyPath;
+* \- (void)setValue:(id)value forKey:(NSString *)key;
+* \- (id)valueForKeyPath:(NSString *)keyPath;
+* \- (id)valueForKey:(NSString *)key; 
 ### setValue:forKey:原理图
 ![image](https://github.com/lin450922/Objective-C/blob/master/images/setValueForKey.png)
 ### valueForKey:原理图
 ![image](https://github.com/lin450922/Objective-C/blob/master/images/ValueForKey.png)
+
+# Category
+## Category的结构
+![image](https://github.com/lin450922/Objective-C/blob/master/images/CategoryStruct.png)
+## 分类的加载过程
+* 通过Runtime加载某个类的所有Category数据
+* 把所有Category的方法、属性、协议数据，合并到一个大数组中，后面参与编译的Category数据，会在数组的前面
+* 将合并后的分类数据（方法、属性、协议），插入到类原来数据的前面
+### +load方法
+```
+Invoked whenever a class or category is added to the Objective-C runtime; implement this method to perform class-specific behavior upon loading.
+```
+这是Apple官方文档对于load方法的解释，意思是类和分类的load方法是在Objective-C运行时加载的时候调用的。<br>
+每个类、分类的+load，在程序运行过程中只调用一次,而且+load方法是根据方法地址直接调用，并不是经过objc_msgSend函数调用，调用顺序:
+* 先调用类的+load
+ * 按照编译先后顺序调用（先编译，先调用）
+ * 调用子类的+load之前会先调用父类的+load
+* 再调用分类的+load
+ * 按照编译先后顺序调用（先编译，先调用）
+### +initialize方法
+```
+Initializes the class before it receives its first message.
+```
+这是Apple官方文档的一段解释，意思是initialize方法是在类第一次接收到消息的时候调用的。<br>
+调用顺序
+* 先调用父类的+initialize
+* 再调用子类的+initialize(先初始化父类，再初始化子类，每个类只会初始化1次)
+
+### +initialize和+load方法对比
++initialize和+load的比较:
+
+* 1.调用方式
+ * load是根据函数地址直接调用
+ * initialize是通过objc_msgSend调用，如果子类没有实现+initialize，会调用父类的+initialize（所以父类的+initialize可能会被调用多次），如果分类实现了+initialize，就覆盖类本身的+initialize调用
+
+* 2.调用时刻
+ * load是runtime加载类、分类的时候调用（只会调用1次）
+ * initialize是类第一次接收到消息的时候调用，每一个类只会initialize一次（父类的initialize方法可能会被调用多次）
+
+* 3.load、initialize的调用顺序
+ * 3.1.load
+  * 先调用类的load
+  * 先编译的类，优先调用load
+  * 调用子类的load之前，会先调用父类的load
+  * 再调用分类的load
+  * 先编译的分类，优先调用load
+ * 3.2.initialize
+  * 先初始化父类
+  * 再初始化子类（可能最终调用的是父类的initialize方法）
+
+
 
 
 
