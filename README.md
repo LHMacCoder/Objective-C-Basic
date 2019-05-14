@@ -77,7 +77,7 @@ objectMetaClass是NSObject的meta-class对象（元类对象），每个类在�
 ### 类对象和元类对象的本质
 class、meta-class对象的本质结构都是struct objc_class。
 #### struct objc_class
-![image](https://github.com/lin450922/Objective-C/blob/master/images/struct objc_class.png)
+![image](https://github.com/lin450922/Objective-C/blob/master/images/struct_objc_class.png)
 
 
 
