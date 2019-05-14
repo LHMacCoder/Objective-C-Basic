@@ -1,5 +1,5 @@
 # Objective-C
-Objective-C语法和底层知识的整理，方便个人复习。
+Objective-C语法和底层知识的整理，方便个人复习。以下所有内容参考自小码哥底层班，如有侵权请联系（qq:294161255）删除。
 # Objective-C本质
 Objective-C的底层代码其实都是由C/C++来实现的，Objective-C中的对象就有C++中的结构体这一种数据结构来构造。<br>一个NSObject对象，系统分配了16个字节给NSObject对象（通过malloc_size函数获得），但NSObject对象内部只使用了8个字节的空间（64bit环境下，可以通过class_getInstanceSize函数获得）。这里涉及到一个知识点：内存对齐。<br> 
 * 内存对齐：
@@ -81,8 +81,22 @@ class、meta-class对象的本质结构都是struct objc_class。
 # KVO & KVC
 ## KVO
 KVO的全称是Key-Value Observing，俗称“键值监听”，可以用于监听某个对象属性值的改变。
+```
+NSKeyValueObservingOptions options = NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld;
+[实例对象 addObserver:观察者 forKeyPath:@"key" options:options context:nil];
 
-
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
+{
+    NSLog(@"监听到%@的%@属性值改变了 - %@ - %@", object, keyPath, change, context);
+}
+```
+### 未使用KVO监听的对象
+![image](https://github.com/lin450922/Objective-C/blob/master/images/NO_KVO.png)
+可以看到当对象没有被监听的时候，对对象的属性赋值是直接调用了该对象属性的set方法。
+### 使用了KVO监听的对象
+![image](https://github.com/lin450922/Objective-C/blob/master/images/KVO_Class.png)
+当对象被监听之后，Objective-C通过Runtime机制，动态的生成了该对象的一个子类：'NSKVONotifying_类名'，并将原来的实例对象的isa指针指向'NSKVONotifying_类名'这个子类。<br>
+当实例对象的属性值被修改后，实例对象通过isa指针找到'NSKVONotifying_类名'对象
 
 
 
