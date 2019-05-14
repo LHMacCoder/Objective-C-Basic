@@ -65,6 +65,7 @@ objectMetaClass是NSObject的meta-class对象（元类对象），每个类在�
   * isa找meta-class，方法不存在，就通过superclass找父类
 ## 类的结构
 ### isa指针结构
+![image](https://github.com/lin450922/Objective-C/blob/master/images/isa指针.png)
 * 从64bit开始，isa需要进行一次位运算，才能计算出真实地址。
 ```
 # if __arm64__
@@ -76,6 +77,7 @@ objectMetaClass是NSObject的meta-class对象（元类对象），每个类在�
 ### 类对象和元类对象的本质
 class、meta-class对象的本质结构都是struct objc_class。
 #### struct objc_class
+![image](https://github.com/lin450922/Objective-C/blob/master/images/.png)
 
 
 
