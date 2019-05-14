@@ -184,11 +184,9 @@ Initializes the class before it receives its first message.
 * 1.调用方式
  * load是根据函数地址直接调用
  * initialize是通过objc_msgSend调用，如果子类没有实现+initialize，会调用父类的+initialize（所以父类的+initialize可能会被调用多次），如果分类实现了+initialize，就覆盖类本身的+initialize调用
-
 * 2.调用时刻
  * load是runtime加载类、分类的时候调用（只会调用1次）
  * initialize是类第一次接收到消息的时候调用，每一个类只会initialize一次（父类的initialize方法可能会被调用多次）
-
 * 3.load、initialize的调用顺序
  * 3.1.load
   * 先调用类的load
@@ -199,6 +197,41 @@ Initializes the class before it receives its first message.
  * 3.2.initialize
   * 先初始化父类
   * 再初始化子类（可能最终调用的是父类的initialize方法）
+  
+# 关联对象
+默认情况下，因为分类底层结构的限制，不能添加成员变量到分类中。但可以通过关联对象来间接实现。<br>
+关联对象提供了以下API：
+```
+// 添加关联对象
+void objc_setAssociatedObject(id object, const void * key, id value, objc_AssociationPolicy policy)
+
+// 获得关联对象
+id objc_getAssociatedObject(id object, const void * key)
+
+// 移除所有的关联对象
+void objc_removeAssociatedObjects(id object)
+```
+key的常见用法：
+```
+static void *MyKey = &MyKey;
+objc_setAssociatedObject(obj, MyKey, value, OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+objc_getAssociatedObject(obj, MyKey)
+
+static char MyKey;
+objc_setAssociatedObject(obj, &MyKey, value, OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+objc_getAssociatedObject(obj, &MyKey)
+
+// 使用属性名作为key
+objc_setAssociatedObject(obj, @"property", value, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+objc_getAssociatedObject(obj, @"property");
+
+// 使用get方法的@selecor作为key
+objc_setAssociatedObject(obj, @selector(getter), value, OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+objc_getAssociatedObject(obj, @selector(getter))
+```
+## objc_AssociationPolicy
+Markdown 表格========|产品|网址|年份||----|-----|-----||米扑代理|[proxy.mimvp.com](http://proxy.mimvp.com)|2014||米扑域名|[domain.mimvp.com](http://domain.mimvp.com)|2015||米扑支付|[pay.mimvp.com](http://pay.mimvp.com)|2016||米扑财富|[money.mimvp.com](http://money.mimvp.com)|2017|
+
 
 
 
