@@ -139,8 +139,17 @@ void _NSSetIntValueAndNotify()
 * 调用原来的setter实现
 * 调用didChangeValueForKey:
 * didChangeValueForKey:内部会调用observer的observeValueForKeyPath:ofObject:change:context:方法
-
-
+## KVC
+KVC的全称是Key-Value Coding，俗称“键值编码”，可以通过一个key来访问某个属性<br>
+常见的API有
+* - (void)setValue:(id)value forKeyPath:(NSString *)keyPath;
+* - (void)setValue:(id)value forKey:(NSString *)key;
+* - (id)valueForKeyPath:(NSString *)keyPath;
+* - (id)valueForKey:(NSString *)key; 
+### setValue:forKey:原理图
+![image](https://github.com/lin450922/Objective-C/blob/master/images/setValueForKey.png)
+### valueForKey:原理图
+![image](https://github.com/lin450922/Objective-C/blob/master/images/ValueForKey.png)
 
 
 
