@@ -230,12 +230,20 @@ objc_getAssociatedObject(obj, @selector(getter))
 ```
 ## objc_AssociationPolicy
 | objc_AssociationPolicy        | 对应的修饰符  |
-| ------------- | -----:|
+| ------------- | :----- |
 | OBJC_ASSOCIATION_ASSIGN   | assign |
 |  OBJC_ASSOCIATION_RETAIN_NONATOMIC  |  strong,nonatomic |
 |  OBJC_ASSOCIATION_COPY_NONATOMIC  |   copy,nonatomic |
 |  OBJC_ASSOCIATION_RETAIN  |   strong,atomic |
 |  OBJC_ASSOCIATION_COPY  |   copy,atomic |
+
+## 关联对象的原理
+实现关联对象技术的核心对象有:
+* AssociationsManager
+* AssociationsHashMap
+* ObjectAssociationMap
+* ObjcAssociation
+
 
 
 
