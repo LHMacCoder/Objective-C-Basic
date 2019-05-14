@@ -96,7 +96,50 @@ NSKeyValueObservingOptions options = NSKeyValueObservingOptionNew | NSKeyValueOb
 ### 使用了KVO监听的对象
 ![image](https://github.com/lin450922/Objective-C/blob/master/images/KVO_Class.png)
 当对象被监听之后，Objective-C通过Runtime机制，动态的生成了该对象的一个子类：`NSKVONotifying_类名`，并将原来的实例对象的isa指针指向`NSKVONotifying_类名`这个子类。<br>
-当实例对象的属性值被修改后，实例对象通过isa指针找到`NSKVONotifying_类名`对象
+当实例对象的属性值被修改后，实例对象通过isa指针找到`NSKVONotifying_类名`这个类对象，然后调用set方法，`NSKVONotifying_类名`重写set方法实现了属性值得监听。
+```
+- (void)setAge:(int)age
+{
+    _NSSetIntValueAndNotify();
+}
+```
+\_NSSetIntValueAndNotify()是对整形类型的一个监听实现，除此之外还包括如下类型：
+* \_NSSetBoolValueAndNotify()
+* \_NSSetCharValueAndNotify()
+* \_NSSetDoubleValueAndNotify()
+* \_NSSetFloatValueAndNotify()
+* \_NSSetLongLongValueAndNotify()
+* \_NSSetLongValueAndNotify()
+* \_NSSetObjectValueAndNotify()
+* \_NSSetPointValueAndNotify()
+* \_NSSetRangeValueAndNotify()
+* \_NSSetRectValueAndNotify()
+* \_NSSetShortValueAndNotify()
+* \_NSSetSizeValueAndNotify()
+#### \_NSSet*ValueAndNotify的内部实现
+```
+- (void)setAge:(int)age
+{
+    _NSSetIntValueAndNotify();
+}
+// 伪代码
+void _NSSetIntValueAndNotify()
+{
+    [self willChangeValueForKey:@"age"];
+    [super setAge:age];
+    [self didChangeValueForKey:@"age"];
+}
+- (void)didChangeValueForKey:(NSString *)key
+{
+    // 通知监听器，某某属性值发生了改变
+    [oberser observeValueForKeyPath:key ofObject:self change:nil context:nil];
+}
+```
+ 调用willChangeValueForKey:<br>调用原来的setter实现<br>调用didChangeValueForKey:<br>didChangeValueForKey:内部会调用observer的observeValueForKeyPath:ofObject:change:context:方法
+
+
+
+
 
 
 
