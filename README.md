@@ -180,7 +180,6 @@ Initializes the class before it receives its first message.
 
 ### +initialize和+load方法对比
 +initialize和+load的比较:
-
 * 1.调用方式
  * load是根据函数地址直接调用
  * initialize是通过objc_msgSend调用，如果子类没有实现+initialize，会调用父类的+initialize（所以父类的+initialize可能会被调用多次），如果分类实现了+initialize，就覆盖类本身的+initialize调用
@@ -197,7 +196,6 @@ Initializes the class before it receives its first message.
  * 3.2.initialize
   * 先初始化父类
   * 再初始化子类（可能最终调用的是父类的initialize方法）
-  
 # 关联对象
 默认情况下，因为分类底层结构的限制，不能添加成员变量到分类中。但可以通过关联对象来间接实现。<br>
 关联对象提供了以下API：
