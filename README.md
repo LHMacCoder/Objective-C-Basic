@@ -28,11 +28,27 @@ objectClass1 ~ objectClass5都是NSObject的class对象（类对象）。它们�
 * 类的协议信息（protocol）、类的成员变量信息（ivar）
 ## 元类对象（meta-class对象）
 ```
-Class objectMetaClass = object_getClass(objectClass5);
+Class objectMetaClass = object_getClass(objectClass5);  //Runtime API
+// 注意以下方法获得的是类对象而不是元类对象
+Class object = [[NSObject class] class];
 ```
 objectMetaClass是NSObject的meta-class对象（元类对象），每个类在内存中有且只有一个meta-class对象。<br>
 * 元类对象在内存中的存储信息包括：
 * isa指针
 * superclass指针
 * 类的类方法信息（class mehtod）
+## isa指针和superclass指针
+### isa指针
+
+
+
+
+
+
+
+
+
+
+
+
 
