@@ -5,5 +5,12 @@ Objective-C的底层代码其实都是由C/C++来实现的，Objective-C中的�
 * 内存对齐：
 # Objective-C对象的分类
 OC对象有3种：实例对象、类对象和元类对象。
-## 实例对象
+## 实例对象(instance对象)
+* instance对象就是通过类alloc出来的对象，每次调用alloc都会产生新的instance对象<br>
+```
+NSObject *object1 = [[NSObject alloc] init];
+NSObject *object2 = [[NSObject alloc] init];
+```
+object1和object2分别是两个不同的实例对象，分别占据两块不同的内存空间。<br>实例对象在内存中的存储信息包括：isa指针和成员变量的具体值。
+## 类对象（Class对象）
 * 
