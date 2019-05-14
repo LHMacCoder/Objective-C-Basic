@@ -135,10 +135,12 @@ void _NSSetIntValueAndNotify()
     [oberser observeValueForKeyPath:key ofObject:self change:nil context:nil];
 }
 ```
-  调用willChangeValueForKey:
-  调用原来的setter实现
-  调用didChangeValueForKey:
-  didChangeValueForKey:内部会调用observer的observeValueForKeyPath:ofObject:change:context:方法
+* 调用willChangeValueForKey:
+* 调用原来的setter实现
+* 调用didChangeValueForKey:
+* didChangeValueForKey:内部会调用observer的observeValueForKeyPath:ofObject:change:context:方法
+
+
 
 
 
