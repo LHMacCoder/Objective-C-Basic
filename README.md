@@ -95,8 +95,8 @@ NSKeyValueObservingOptions options = NSKeyValueObservingOptionNew | NSKeyValueOb
 可以看到当对象没有被监听的时候，对对象的属性赋值是直接调用了该对象属性的set方法。
 ### 使用了KVO监听的对象
 ![image](https://github.com/lin450922/Objective-C/blob/master/images/KVO_Class.png)
-当对象被监听之后，Objective-C通过Runtime机制，动态的生成了该对象的一个子类：'NSKVONotifying_类名'，并将原来的实例对象的isa指针指向'NSKVONotifying_类名'这个子类。<br>
-当实例对象的属性值被修改后，实例对象通过isa指针找到'NSKVONotifying_类名'对象
+当对象被监听之后，Objective-C通过Runtime机制，动态的生成了该对象的一个子类：`NSKVONotifying_类名`，并将原来的实例对象的isa指针指向`NSKVONotifying_类名`这个子类。<br>
+当实例对象的属性值被修改后，实例对象通过isa指针找到`NSKVONotifying_类名`对象
 
 
 
