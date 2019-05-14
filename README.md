@@ -39,6 +39,7 @@ objectMetaClass是NSObject的meta-class对象（元类对象），每个类在�
 * 类的类方法信息（class mehtod）
 ## isa指针和superclass指针
 ### isa指针
+![image](https://github.com/lin450922/Objective-C/blob/master/images/isa指针指向.png)
 
 
 
