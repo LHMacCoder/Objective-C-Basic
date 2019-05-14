@@ -180,22 +180,23 @@ Initializes the class before it receives its first message.
 
 ### +initialize和+load方法对比
 +initialize和+load的比较:
-* 1.调用方式
- * load是根据函数地址直接调用
- * initialize是通过objc_msgSend调用，如果子类没有实现+initialize，会调用父类的+initialize（所以父类的+initialize可能会被调用多次），如果分类实现了+initialize，就覆盖类本身的+initialize调用
-* 2.调用时刻
- * load是runtime加载类、分类的时候调用（只会调用1次）
- * initialize是类第一次接收到消息的时候调用，每一个类只会initialize一次（父类的initialize方法可能会被调用多次）
-* 3.load、initialize的调用顺序
- * 3.1.load
-  * 先调用类的load
-  * 先编译的类，优先调用load
-  * 调用子类的load之前，会先调用父类的load
-  * 再调用分类的load
-  * 先编译的分类，优先调用load
- * 3.2.initialize
-  * 先初始化父类
-  * 再初始化子类（可能最终调用的是父类的initialize方法）
+* 调用方式
+  * load是根据函数地址直接调用
+  * initialize是通过objc_msgSend调用，如果子类没有实现+initialize，会调用父类的+initialize（所以父类的+initialize可能会被调用多次）
+  * 如果分类实现了+initialize，就覆盖类本身的+initialize调用
+* 调用时刻
+  * load是runtime加载类、分类的时候调用（只会调用1次）
+  * initialize是类第一次接收到消息的时候调用，每一个类只会initialize一次（父类的initialize方法可能会被调用多次）
+* load、initialize的调用顺序
+  * load
+    * 先调用类的load
+    * 先编译的类，优先调用load
+    * 调用子类的load之前，会先调用父类的load
+    * 再调用分类的load
+    * 先编译的分类，优先调用load
+  * initialize
+    * 先初始化父类
+    * 再初始化子类（可能最终调用的是父类的initialize方法）
 # 关联对象
 默认情况下，因为分类底层结构的限制，不能添加成员变量到分类中。但可以通过关联对象来间接实现。<br>
 关联对象提供了以下API：
@@ -228,7 +229,15 @@ objc_setAssociatedObject(obj, @selector(getter), value, OBJC_ASSOCIATION_RETAIN_
 objc_getAssociatedObject(obj, @selector(getter))
 ```
 ## objc_AssociationPolicy
-Markdown 表格========|产品|网址|年份||----|-----|-----||米扑代理|[proxy.mimvp.com](http://proxy.mimvp.com)|2014||米扑域名|[domain.mimvp.com](http://domain.mimvp.com)|2015||米扑支付|[pay.mimvp.com](http://pay.mimvp.com)|2016||米扑财富|[money.mimvp.com](http://money.mimvp.com)|2017|
+| objc_AssociationPolicy        | 对应的修饰符  |
+| ------------- | -----:|
+| OBJC_ASSOCIATION_ASSIGN   | assign |
+|  OBJC_ASSOCIATION_RETAIN_NONATOMIC  |  strong,nonatomic |
+|  OBJC_ASSOCIATION_COPY_NONATOMIC  |   copy,nonatomic |
+|  OBJC_ASSOCIATION_RETAIN  |   strong,atomic |
+|  OBJC_ASSOCIATION_COPY  |   copy,atomic |
+
+
 
 
 
