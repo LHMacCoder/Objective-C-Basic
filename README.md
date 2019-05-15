@@ -251,7 +251,7 @@ objc_getAssociatedObject(obj, @selector(getter))
 ## block本质
 block本质上也是一个OC对象，它内部也有个isa指针。<br>block是封装了函数调用以及函数调用环境的OC对象。
 block的底层结构如图所示
-![image](https://github.com/lin450922/Objective-C/blob/master/images/block本质.png)
+![image](https://github.com/lin450922/Objective-C/blob/master/images/block结构.png)
 ## block的声明
 ```
 作为局部变量:
@@ -339,6 +339,9 @@ block在内存中的存储位置：
 ## \__block内存管理
 * 当block在栈上时，并不会对__block变量产生强引用
 * 当block被copy到堆时，会调用block内部的copy函数，copy函数内部会调用\_Block_object_assign函数，\_Block_object_assign函数会对\__block变量形成强引用（retain）
+![image](https://github.com/lin450922/Objective-C/blob/master/images/__block内存管理1.png)
+![image](https://github.com/lin450922/Objective-C/blob/master/images/__block内存管理2.png)
+
 
 
 
