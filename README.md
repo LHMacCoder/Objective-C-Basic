@@ -2,7 +2,7 @@
 Objective-C语法和底层知识的整理，方便个人复习。如有侵权请联系（qq:294161255）删除。
 # Objective-C本质
 Objective-C的底层代码其实都是由C/C++来实现的，Objective-C中的对象就有C++中的结构体这一种数据结构来构造。<br>一个NSObject对象，系统分配了16个字节给NSObject对象（通过malloc_size函数获得），但NSObject对象内部只使用了8个字节的空间（64bit环境下，可以通过class_getInstanceSize函数获得）。这里涉及到一个知识点：内存对齐。<br> 
-* 内存对齐（针对Apple x86_64\arm64结构）：
+* 内存对齐（针对Apple x86_64\arm64架构）
   * 结构体内存对齐：内存分配的字节数为8的倍数
   * 系统内存对齐：分配的字节数为16的倍数
 # Objective-C对象的分类
@@ -245,6 +245,41 @@ objc_getAssociatedObject(obj, @selector(getter))
 * AssociationsHashMap
 * ObjectAssociationMap
 * ObjcAssociation
+关联对象并不是存储在被关联对象本身内存中，关联对象存储在全局的统一的一个AssociationsManager中
+
+# block
+## block本质
+block本质上也是一个OC对象，它内部也有个isa指针。<br>block是封装了函数调用以及函数调用环境的OC对象。
+block的底层结构如图所示
+![image](https://github.com/lin450922/Objective-C/blob/master/images/block本质.png)
+## block变量的捕获
+block内部为了保证能够访问外部的变量，block有一个变量捕获机制，如下图所示：
+![image](https://github.com/lin450922/Objective-C/blob/master/images/block变量捕获.png)
+### auto变量的捕获
+......
+
+## block的类型
+block有3种类型，可以通过调用class方法或者isa指针查看具体类型，最终都是继承自NSBlock类型
+* \__NSGlobalBlock__ （ _NSConcreteGlobalBlock ）
+* \__NSStackBlock__ （ _NSConcreteStackBlock ）
+* \__NSMallocBlock__ （ _NSConcreteMallocBlock ）
+
+| block的类型        | 环境  |
+| ------------- | :----- |
+| NSGlobalBlock   | 没有访问auto变量 |
+|  NSStackBlock  |  访问了auto变量 |
+|  NSMallocBlock  |   NSStackBlock调用了copy |
+
+block在内存中的存储位置：
+![image](https://github.com/lin450922/Objective-C/blob/master/images/block内存分配.png)
+
+每种类型的block调用了copy后的结果如下：
+| block的类型 | 副本源的配置存储域 | 复制效果 |
+| -----------| :----- | :--------|
+| NSGlobalBlock | 栈 | 从栈复制到堆 |
+| NSStackBlock  | 程序的数据区域 | 什么也不做 |
+| NSMallocBlock | 堆 | 引用技术加1 |
+
 
 
 
