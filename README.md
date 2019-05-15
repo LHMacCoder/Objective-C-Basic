@@ -252,6 +252,27 @@ objc_getAssociatedObject(obj, @selector(getter))
 block本质上也是一个OC对象，它内部也有个isa指针。<br>block是封装了函数调用以及函数调用环境的OC对象。
 block的底层结构如图所示
 ![image](https://github.com/lin450922/Objective-C/blob/master/images/block本质.png)
+## block的声明
+```
+作为局部变量:
+returnType (^blockName)(parameterTypes) = ^returnType(parameters) {...};
+
+作为属性:
+@property (nonatomic, copy, nullability) returnType (^blockName)(parameterTypes);
+
+作为函数参数:
+- (void)someMethodThatTakesABlock:(returnType (^nullability)(parameterTypes))blockName;
+
+作为方法调用的参数:
+[someObject someMethodThatTakesABlock:^returnType (parameters) {...}];
+
+作为C函数的参数:
+void SomeFunctionThatTakesABlock(returnType (^blockName)(parameterTypes));
+
+typedef:
+typedef returnType (^TypeName)(parameterTypes);
+TypeName blockName = ^returnType(parameters) {...};
+```
 ## block变量的捕获
 block内部为了保证能够访问外部的变量，block有一个变量捕获机制，如下图所示：
 ![image](https://github.com/lin450922/Objective-C/blob/master/images/block变量捕获.png)
@@ -273,12 +294,51 @@ block有3种类型，可以通过调用class方法或者isa指针查看具体类
 block在内存中的存储位置：
 ![image](https://github.com/lin450922/Objective-C/blob/master/images/block内存分配.png)
 
-每种类型的block调用了copy后的结果如下
+ 每种类型的block调用了copy后的结果如下
+ 
 | block的类型 | 副本源的配置存储域 | 复制效果 |
 | ----------- | :----- | :------- |
 | NSGlobalBlock | 栈 | 从栈复制到堆 |
 | NSStackBlock  | 程序的数据区域 | 什么也不做 |
 | NSMallocBlock | 堆 | 引用技术加1 |
+
+## block的copy
+在ARC环境下，编译器会根据情况自动将栈上的block复制到堆上，比如以下情况<br>
+* block作为函数返回值时
+* 将block赋值给__strong指针时
+* block作为Cocoa API中方法名含有usingBlock的方法参数时
+* block作为GCD API的方法参数时
+
+ MRC下block属性的建议写法
+```
+@property (copy, nonatomic) void (^block)(void);
+```
+
+ ARC下block属性的建议写法
+ ```
+@property (strong, nonatomic) void (^block)(void);
+@property (copy, nonatomic) void (^block)(void);
+```
+## 访问对象类型的auto变量
+当block内部访问了对象类型的auto变量时
+* 如果block是在栈上，将不会对auto变量产生强引用
+
+如果block被拷贝到堆上
+* 会调用block内部的copy函数，copy函数内部会调用_Block_object_assign函数，_Block_object_assign函数会根据auto变量的修饰符（__strong、__weak、__unsafe_unretained）做出相应的操作，形成强引用（retain）或者弱引用
+
+如果block从堆上移除
+* 会调用block内部的dispose函数，dispose函数内部会调用_Block_object_dispose函数，_Block_object_dispose函数会自动释放引用的auto变量（release）
+| 函数 | 调用时机 |
+| --- | :----- |
+| copy | 栈上的block复制到堆 |
+| dispose | 堆上的block被废弃 |
+
+## \__block修饰符
+\__block可以用于解决block内部无法修改auto变量值的问题,\__block不能修饰全局变量、静态变量（static）,编译器会将\__block变量包装成一个对象。
+
+## \__block内存管理
+* 当block在栈上时，并不会对__block变量产生强引用
+* 当block被copy到堆时，会调用block内部的copy函数，copy函数内部会调用\_Block_object_assign函数，\_Block_object_assign函数会对\__block变量形成强引用（retain）
 
 
 
