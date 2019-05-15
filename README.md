@@ -350,8 +350,34 @@ block在内存中的存储位置：
 * 当__block变量被copy到堆时，会调用__block变量内部的copy函数，copy函数内部会调用_Block_object_assign函数，_Block_object_assign函数会根据所指向对象的修饰符（__strong、__weak、__unsafe_unretained）做出相应的操作，形成强引用（retain）或者弱引用（注意：这里仅限于ARC时会retain，MRC时不会retain）
 * 如果__block变量从堆上移除，会调用__block变量内部的dispose函数，dispose函数内部会调用_Block_object_dispose函数，_Block_object_dispose函数会自动释放指向的对象（release）
 
+## 循环引用问题
+循环引用即：A对象持有block，block内部持有A。
+![image](https://github.com/lin450922/Objective-C/blob/master/images/循环引用.png)
 
+### ARC下解决循环引用问题
+* 用__weak、__unsafe_unretained解决
+```
+    __weak typeof(self) weakSelf = self;
+    self.block = ^{        
+        NSLog(@"age is %d", myself->_age);
+    };
+    
+    __unsafe_unretained typeof(self) weakSelf = self;
+    self.block = ^{
+        NSLog(@"age is %d", weakSelf.age);
+    };
+```
+![image](https://github.com/lin450922/Objective-C/blob/master/images/weak解决循环引用.png)
 
+* 用__block解决（必须要调用block）
+```
+__block id weakSelf = self;
+self.block = ^{
+ weakSelf = nil;
+}
+self.block();
+```
+![image](https://github.com/lin450922/Objective-C/blob/master/images/block解决循环引用.png)
 
 
 
