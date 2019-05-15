@@ -20,8 +20,8 @@ Objective-C语法和底层知识的整理，方便个人复习。如有侵权请
     * [使用了KVO监听的对象](#使用了KVO监听的对象)
       * [_NSSet*ValueAndNotify的内部实现](#_NSSet*ValueAndNotify的内部实现)
   * [KVC](#KVC)
-  * [setValue:forKey:原理图](#setValue\:forKey:原理图)
-  * [valueForKey:原理图](#valueForKey\:原理图)
+  * [setValue:forKey:原理图](#setValueforKey原理图)
+  * [valueForKey:原理图](#valueForKey原理图)
 * [Category](#Category)
   * [Category的结构](#Category的结构)
   * [分类的加载过程](#分类的加载过程)
@@ -194,9 +194,9 @@ KVC的全称是Key-Value Coding，俗称“键值编码”，可以通过一个k
 * \- (void)setValue:(id)value forKey:(NSString *)key;
 * \- (id)valueForKeyPath:(NSString *)keyPath;
 * \- (id)valueForKey:(NSString *)key; 
-### setValue:forKey:原理图
+### setValueforKey原理图
 ![image](https://github.com/lin450922/Objective-C/blob/master/images/setValueForKey.png)
-### valueForKey:原理图
+### valueForKey原理图
 ![image](https://github.com/lin450922/Objective-C/blob/master/images/ValueForKey.png)
 
 # Category
