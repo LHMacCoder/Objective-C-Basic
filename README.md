@@ -374,6 +374,7 @@ block在内存中的存储位置：
 
 如果block从堆上移除
 * 会调用block内部的dispose函数，dispose函数内部会调用_Block_object_dispose函数，_Block_object_dispose函数会自动释放引用的auto变量（release）
+
 | 函数 | 调用时机 |
 | --- | :----- |
 | copy | 栈上的block复制到堆 |
