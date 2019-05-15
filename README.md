@@ -379,6 +379,21 @@ self.block();
 ```
 ![image](https://github.com/lin450922/Objective-C/blob/master/images/block解决循环引用.png)
 
+### MRC下解决循环引用问题
+```
+    __unsafe_unretained typeof(self) weakSelf = self;
+    self.block = ^{
+        NSLog(@"age is %d", weakSelf.age);
+    };
+    
+    __block id weakSelf = self;
+    self.block = ^{
+      weakSelf = nil;
+   };
+```
+注意MRC下是不用像ARC那样必须调用block才能解决循环引用，因为MRC下\__block修饰的对象类型，并不会强引用。
+
+
 
 
 
