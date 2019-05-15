@@ -342,6 +342,16 @@ block在内存中的存储位置：
 ![image](https://github.com/lin450922/Objective-C/blob/master/images/__block内存管理1.png)
 ![image](https://github.com/lin450922/Objective-C/blob/master/images/__block内存管理2.png)
 
+* 当block从堆中移除时,会调用block内部的dispose函数,dispose函数内部会调用\_Block_object_dispose函数,\_Block_object_dispose函数会自动释放引用的\__block变量（release）
+![image](https://github.com/lin450922/Objective-C/blob/master/images/__block内存管理3.png)
+
+## 被\__block修饰的对象类型
+* 当__block变量在栈上时，不会对指向的对象产生强引用
+* 当__block变量被copy到堆时，会调用__block变量内部的copy函数，copy函数内部会调用_Block_object_assign函数，_Block_object_assign函数会根据所指向对象的修饰符（__strong、__weak、__unsafe_unretained）做出相应的操作，形成强引用（retain）或者弱引用（注意：这里仅限于ARC时会retain，MRC时不会retain）
+* 如果__block变量从堆上移除，会调用__block变量内部的dispose函数，dispose函数内部会调用_Block_object_dispose函数，_Block_object_dispose函数会自动释放指向的对象（release）
+
+
+
 
 
 
