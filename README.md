@@ -273,9 +273,9 @@ block有3种类型，可以通过调用class方法或者isa指针查看具体类
 block在内存中的存储位置：
 ![image](https://github.com/lin450922/Objective-C/blob/master/images/block内存分配.png)
 
-每种类型的block调用了copy后的结果如下：
+每种类型的block调用了copy后的结果如下
 | block的类型 | 副本源的配置存储域 | 复制效果 |
-| -----------| :----- | :--------|
+| ----------- | :----- | :------- |
 | NSGlobalBlock | 栈 | 从栈复制到堆 |
 | NSStackBlock  | 程序的数据区域 | 什么也不做 |
 | NSMallocBlock | 堆 | 引用技术加1 |
